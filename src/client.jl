@@ -38,7 +38,7 @@ type WSClient <: AbstractWSClient
 
     function WSClient(;
                       do_handshake=DandelionWebSockets.do_handshake,
-                      rng::AbstractRNG=MersenneTwister(),
+                      rng::AbstractRNG=MersenneTwister(0),
                       writer::AbstractWriterTaskProxy=WriterTaskProxy(),
                       handler_proxy::AbstractHandlerTaskProxy=HandlerTaskProxy(),
                       logic_proxy::AbstractClientTaskProxy=ClientLogicTaskProxy(),
@@ -145,7 +145,7 @@ end
 stop(c::WSClient) = handle(c.logic_proxy, CloseRequest())
 
 "Send a single text frame."
-send_text(c::WSClient, s::Compat.UTF8String) = handle(c.logic_proxy, SendTextFrame(s, true, OPCODE_TEXT))
+send_text(c::WSClient, s::String) = handle(c.logic_proxy, SendTextFrame(s, true, OPCODE_TEXT))
 
 "Send a single binary frame."
 send_binary(c::WSClient, data::Vector{UInt8}) =

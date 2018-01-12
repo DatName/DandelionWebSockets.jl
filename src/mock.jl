@@ -41,7 +41,7 @@ a string comparison.
 
 All `AbstractMatcher` types `T` must define a function `mock_match(::T, v::Any)`.
 """
-abstract AbstractMatcher
+abstract type AbstractMatcher end
 
 "Simply match a value by equality. This is the default."
 immutable ValueMatcher <: AbstractMatcher

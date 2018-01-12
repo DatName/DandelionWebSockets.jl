@@ -6,13 +6,13 @@
 # The other layer is a randomization of the previous backoff, jiggling the timeout a few seconds
 # longer or shorter.
 
-import Base: reset
+import Base: reset, retry
 using Compat
 
 export AbstractBackoff, Backoff, RandomizedBackoff, reset, backoff_min, backoff_max
 export AbstractRetry, Retry, retry, set_function
 
-abstract AbstractBackoff
+abstract type AbstractBackoff end
 
 "A backoff that follows a atan curve, and reaches about 90% of max backoff in 12 attempts."
 type Backoff <: AbstractBackoff
@@ -55,7 +55,7 @@ backoff_max(b::RandomizedBackoff) = backoff_max(b.backoff)
     max(backoff_min(b), min(backoff_max(b), v + r))
 end
 
-abstract AbstractRetry
+abstract type AbstractRetry end
 
 default_timer_factory = (f, d) -> Timer(f, d)
 

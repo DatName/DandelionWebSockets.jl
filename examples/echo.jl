@@ -18,7 +18,7 @@ type EchoHandler <: WebSocketHandler
 end
 
 # These are called when you get text/binary frames, respectively.
-on_text(::EchoHandler, s::Compat.UTF8String)  = println("Received text: $s")
+on_text(::EchoHandler, s::String)  = println("Received text: $s")
 on_binary(::EchoHandler, data::Vector{UInt8}) = println("Received data: $data")
 
 # These are called when the WebSocket state changes.

@@ -27,11 +27,11 @@ export ClientLogic
 These commands are sent as arguments to the different `handle` functions on `ClientLogic`. Each
 command represents an action on a WebSocket, such as sending a text frame, ping request, or closing
 the connection."
-abstract ClientLogicInput
+abstract type ClientLogicInput end
 
 "Send a text frame, sent to `ClientLogic`."
 immutable SendTextFrame <: ClientLogicInput
-	data::Compat.UTF8String
+	data::String
 	# True if this is the final frame in the text message.
 	isfinal::Bool
 	# What WebSocket opcode should be used.

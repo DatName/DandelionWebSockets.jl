@@ -1,4 +1,4 @@
-abstract AbstractMockTester
+abstract type AbstractMockTester end
 
 module Baz
     bar(::Int, ::AbstractString) = nothing
