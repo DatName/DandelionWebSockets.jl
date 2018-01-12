@@ -47,9 +47,6 @@ type WSClient <: AbstractWSClient
         new(writer, handler_proxy, logic_proxy, Nullable{ServerReader}(), do_handshake, rng, ponger, pinger)
     end
 end
-show(io::IO, c::WSClient) =
-    show(io, "WSClient($(c.handler_proxy), $(c.logic_proxy))")
-
 "Validates a HTTP Upgrade response, and starts all tasks.
 
 Note: As of right now the handshake is not validated, because the response headers aren't set here.

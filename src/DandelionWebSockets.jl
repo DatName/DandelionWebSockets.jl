@@ -24,22 +24,28 @@ abstract type AbstractWSClient end
 abstract type WebSocketHandler end
 
 "Handle a text frame."
-on_text(t::WebSocketHandler, ::Compat.UTF8String) = nothing
+function on_text(t::WebSocketHandler, ::String)
+    T = typeof(t)
+    throw(ErrorException("Method `on_text` is not implemented by $T"))
+end
 
 "Handle a binary frame."
-on_binary(t::WebSocketHandler, ::Vector{UInt8}) = nothing
+function on_binary(t::WebSocketHandler, ::Vector{UInt8})
+    T = typeof(t)
+    throw(ErrorException("Method `on_binary` is not implemented by $T"))
+end
 
 "The WebSocket was closed."
-state_closed(t::WebSocketHandler) = nothing
+state_closed(t::WebSocketHandler) = @printf("[%ls][WS:Closed]\n", now())
 
 "The WebSocket is about to close."
-state_closing(t::WebSocketHandler) = nothing
+state_closing(t::WebSocketHandler) = @printf("[%ls][WS:Closing]\n", now())
 
 "The WebSocket is trying to connect."
-state_connecting(t::WebSocketHandler) = nothing
+state_connecting(t::WebSocketHandler) = @printf("[%ls][WS:Connecting]\n", now())
 
 "The WebSocket is open and ready to send and receive messages."
-state_open(t::WebSocketHandler) = nothing
+state_open(t::WebSocketHandler) = @printf("[%ls][WS:Opened]\n", now())
 
 include("core.jl")
 include("taskproxy.jl")
