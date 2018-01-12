@@ -16,6 +16,7 @@ end
 "Read frames from the network, until an exception is thrown in this task."
 function do_reader(s::IO, logic::AbstractClientTaskProxy)
     try
+        sleep(10)
         while true
             frame = read(s, Frame)
             # This is a proxy, so the actual `handle` call made on the logic object is done in a
@@ -23,14 +24,15 @@ function do_reader(s::IO, logic::AbstractClientTaskProxy)
             handle(logic, FrameFromServer(frame))
         end
     catch ex
+        @printf("[%ls][WS][Reader Task] Caught error: %ls\n", now(), ex)
         # TODO: Handle errors better.
     end
+    @printf("[%ls][WS][Reader Task] Exiting\n", now())
     handle(logic, SocketClosed())
 end
 
 function start_reader(s::IO, logic::AbstractClientTaskProxy)
-    t = @schedule do_reader(s, logic)
-    ServerReader(s, t)
+    ServerReader(s, @schedule do_reader(s, logic))
 end
 
 
@@ -66,7 +68,11 @@ end
 function fill_buffer(s::TLSBufferedIO, n::Int)
     begin_ptr = mark(s.buf)
     while s.buf.size - begin_ptr < n
-        write(s.buf, readavailable(s.tls_stream))
+        data = readavailable(s.tls_stream)
+        if isempty(data)
+            throw(ErrorException("Empty data read. Closed stream?"))
+        end
+        write(s.buf, data)
     end
     reset(s.buf)
 end

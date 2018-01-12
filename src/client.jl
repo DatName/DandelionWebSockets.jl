@@ -43,13 +43,11 @@ mutable struct WSClient <: AbstractWSClient
                       writer::AbstractWriterTaskProxy=WriterTaskProxy(),
                       handler_proxy::AbstractHandlerTaskProxy=HandlerTaskProxy(),
                       logic_proxy::AbstractClientTaskProxy=ClientLogicTaskProxy(),
-                      ponger::AbstractPonger=Ponger(3.0; misses=3),
-                      pinger::AbstractPinger=Pinger(5.0))
+                      ponger::AbstractPonger=Ponger(90.0; misses=30),
+                      pinger::AbstractPinger=Pinger(170.0))
         new(writer, handler_proxy, logic_proxy, Nullable{ServerReader}(), do_handshake, rng, ponger, pinger)
     end
 end
-show(io::IO, c::WSClient) =
-    show(io, "WSClient($(c.handler_proxy), $(c.logic_proxy))")
 
 "Validates a HTTP Upgrade response, and starts all tasks.
 
